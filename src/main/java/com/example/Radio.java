@@ -1,8 +1,21 @@
 package com.example;
 
 public class Radio {
-    private int currentStation = 0;
-    private int currentVolume = 0;
+    private int currentStation;
+    private int currentVolume;
+    private int stationCount;
+
+    public Radio() {
+        this.stationCount = 10;
+    }
+
+    public Radio(int stationCount) {
+        if (stationCount > 0) {
+            this.stationCount = stationCount;
+        } else {
+            this.stationCount = 10;
+        }
+    }
 
     public int getCurrentStation() {
         return currentStation;
@@ -12,14 +25,18 @@ public class Radio {
         return currentVolume;
     }
 
+    public int getStationCount() {
+        return stationCount;
+    }
+
     public void setCurrentStation(int station) {
-        if (station >= 0 && station <= 9) {
+        if (station >= 0 && station < stationCount) {
             currentStation = station;
         }
     }
 
     public void nextStation() {
-        if (currentStation == 9) {
+        if (currentStation == stationCount - 1) {
             currentStation = 0;
         } else {
             currentStation++;
@@ -28,7 +45,7 @@ public class Radio {
 
     public void prevStation() {
         if (currentStation == 0) {
-            currentStation = 9;
+            currentStation = stationCount - 1;
         } else {
             currentStation--;
         }
