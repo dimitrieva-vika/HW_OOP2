@@ -6,56 +6,74 @@ import org.junit.jupiter.api.Test;
 public class RadioTest {
 
     @Test
-    public void shouldSetValidStation() {
+    public void shouldCreateRadioWithDefault10Stations() {
         Radio radio = new Radio();
-        radio.setCurrentStation(5);
-        Assertions.assertEquals(5, radio.getCurrentStation());
+        Assertions.assertEquals(10, radio.getStationCount());
     }
 
     @Test
-    public void shouldNotSetInvalidStationAbove9() {
-        Radio radio = new Radio();
-        radio.setCurrentStation(10);
+    public void shouldCreateRadioWithCustomStationCount() {
+        Radio radio = new Radio(30);
+        Assertions.assertEquals(30, radio.getStationCount());
+    }
+
+    @Test
+    public void shouldCreateRadioWithInvalidStationCountUseDefault() {
+        Radio radio = new Radio(0);
+        Assertions.assertEquals(10, radio.getStationCount());
+    }
+
+    @Test
+    public void shouldSetValidStationWithCustomCount() {
+        Radio radio = new Radio(30);
+        radio.setCurrentStation(25);
+        Assertions.assertEquals(25, radio.getCurrentStation());
+    }
+
+    @Test
+    public void shouldNotSetStationAboveMax() {
+        Radio radio = new Radio(30);
+        radio.setCurrentStation(30);
         Assertions.assertEquals(0, radio.getCurrentStation());
     }
 
     @Test
-    public void shouldNotSetInvalidStationBelow0() {
-        Radio radio = new Radio();
+    public void shouldNotSetStationBelowZero() {
+        Radio radio = new Radio(30);
         radio.setCurrentStation(-1);
         Assertions.assertEquals(0, radio.getCurrentStation());
     }
 
     @Test
-    public void shouldNextStationFrom9To0() {
-        Radio radio = new Radio();
-        radio.setCurrentStation(9);
+    public void shouldNextStationFromMaxToZero() {
+        Radio radio = new Radio(30);
+        radio.setCurrentStation(29);
         radio.nextStation();
         Assertions.assertEquals(0, radio.getCurrentStation());
     }
 
     @Test
-    public void shouldNextStationFrom5To6() {
-        Radio radio = new Radio();
-        radio.setCurrentStation(5);
+    public void shouldNextStationFromMiddle() {
+        Radio radio = new Radio(30);
+        radio.setCurrentStation(15);
         radio.nextStation();
-        Assertions.assertEquals(6, radio.getCurrentStation());
+        Assertions.assertEquals(16, radio.getCurrentStation());
     }
 
     @Test
-    public void shouldPrevStationFrom0To9() {
-        Radio radio = new Radio();
+    public void shouldPrevStationFromZeroToMax() {
+        Radio radio = new Radio(30);
         radio.setCurrentStation(0);
         radio.prevStation();
-        Assertions.assertEquals(9, radio.getCurrentStation());
+        Assertions.assertEquals(29, radio.getCurrentStation());
     }
 
     @Test
-    public void shouldPrevStationFrom5To4() {
-        Radio radio = new Radio();
-        radio.setCurrentStation(5);
+    public void shouldPrevStationFromMiddle() {
+        Radio radio = new Radio(30);
+        radio.setCurrentStation(15);
         radio.prevStation();
-        Assertions.assertEquals(4, radio.getCurrentStation());
+        Assertions.assertEquals(14, radio.getCurrentStation());
     }
 
     @Test
@@ -83,9 +101,29 @@ public class RadioTest {
     }
 
     @Test
-    public void shouldNotDecreaseBelow0() {
+    public void shouldNotDecreaseBelowZero() {
         Radio radio = new Radio();
         radio.decreaseVolume();
         Assertions.assertEquals(0, radio.getCurrentVolume());
+    }
+
+    @Test
+    public void shouldWorkWithMinStationCount() {
+        Radio radio = new Radio(1);
+        radio.setCurrentStation(0);
+        Assertions.assertEquals(0, radio.getCurrentStation());
+        radio.nextStation();
+        Assertions.assertEquals(0, radio.getCurrentStation());
+        radio.prevStation();
+        Assertions.assertEquals(0, radio.getCurrentStation());
+    }
+
+    @Test
+    public void shouldWorkWithLargeStationCount() {
+        Radio radio = new Radio(100);
+        radio.setCurrentStation(99);
+        Assertions.assertEquals(99, radio.getCurrentStation());
+        radio.nextStation();
+        Assertions.assertEquals(0, radio.getCurrentStation());
     }
 }
